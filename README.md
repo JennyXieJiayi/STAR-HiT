@@ -50,6 +50,8 @@ The `{}.pkl` files (both of three phases) contains the data for training, valida
 
 ## Citation
 
+If you find our codes and datasets helpful, please kindly cite the following papers:
+
 ```
 @article{STARHiT,
   author    = {Jiayi Xie and
@@ -61,6 +63,18 @@ The `{}.pkl` files (both of three phases) contains the data for training, valida
   url       = {https://doi.org/10.48550/arXiv.2209.01559},
   doi       = {arXiv:2209.01559},
   eprinttype = {arXiv},
+  eprint    = {2209.01559},
+}
+```
+
+or
+```
+@Eprint{STARHiT,
+  author    = {Jiayi Xie and
+               Zhenzhong Chen},
+  title     = {Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point-of-Interest Recommendation},
+  year      = {2016},
+  archivePrefix = {arXiv},
   eprint    = {2209.01559},
 }
 ```
