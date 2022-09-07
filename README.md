@@ -50,4 +50,17 @@ The `{}.pkl` files (both of three phases) contains the data for training, valida
 
 ## Citation
 
-To be update ...
+```
+@article{STARHiT,
+  author    = {Jiayi Xie and
+               Zhenzhong Chen},
+  title     = {Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point-of-Interest Recommendation},
+  journal   = {CoRR},
+  volume    = {abs/2209.01559},
+  year      = {2022},
+  url       = {https://doi.org/10.48550/arXiv.2209.01559},
+  doi       = {arXiv:2209.01559},
+  eprinttype = {arXiv},
+  eprint    = {2209.01559},
+}
+```
