@@ -5,6 +5,7 @@ Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point
 '''
 from utils.parser import *
 from utils.utils import *
+from utils.log_helper import *
 from metrics import *
 from data import *
 from model import *
@@ -21,6 +22,11 @@ def predict(args, phase='test'):
 	np.random.seed(args.seed)
 	torch.manual_seed(args.seed)
 
+	# log
+	log_save_id = create_log_id(args.trained_model_path)
+	logging_config(folder=args.trained_model_path, name='log{:d}'.format(log_save_id), no_console=False)
+	logging.info(args)
+
 	# GPU / CPU
 	use_cuda = torch.cuda.is_available()
 	device = torch.device("cuda:{}".format(args.cuda_idx) if torch.cuda.is_available() else "cpu")
@@ -35,7 +41,7 @@ def predict(args, phase='test'):
 	                sub_seq_len=args.sub_seq_len,
 	                dropout=args.dropout)
 
-	trained_model = load_model(model, args.trained_model_path)
+	trained_model = load_model(model, args.trained_model_file)
 
 	# load data
 	test_data = NextPOIDataset(phase=phase,
@@ -51,20 +57,11 @@ def predict(args, phase='test'):
 
 if __name__ == "__main__":
 	args = parse_args()
-	# trained_model_path = './models/FoursquareNYC'
-	# model_name = 'model.pth'
-	# args.trained_model_path = os.path.join(trained_model_path, model_name)
-	# hits, ndcgs = predict(args)
-	# print([model_name, hits, ndcgs])
-	# test_metrics = pd.DataFrame([model_name, hits, ndcgs]).transpose()
-	# test_metrics.to_csv(os.path.join(trained_model_path, 'test_results.csv'), mode='a', header=['model', 'hit@5, hit@10', 'ndcg@5, ndcg@10'], sep='\t', index=False)
-
 	trained_model_path = './models/FoursquareNYC'
-	model_names = ['model_{}.pth'.format(i) for i in range(172, 189, 4)]
-	for model_name in model_names:
-		args.trained_model_path = os.path.join(trained_model_path, model_name)
-		hits, ndcgs = predict(args)
-		print([model_name, hits, ndcgs])
-		test_metrics = pd.DataFrame([model_name, hits, ndcgs]).transpose()
-		test_metrics.to_csv(os.path.join(trained_model_path, 'test_results.csv'), mode='a',
-		                    header=['model', 'hit@5, hit@10', 'ndcg@5, ndcg@10'], sep='\t', index=False)
+	model_name = 'model_2.pth'
+	args.trained_model_path = trained_model_path
+	args.trained_model_file = os.path.join(trained_model_path, model_name)
+	hits, ndcgs = predict(args)
+	print([model_name, hits, ndcgs])
+	test_metrics = pd.DataFrame([model_name, hits, ndcgs]).transpose()
+	test_metrics.to_csv(os.path.join(trained_model_path, 'test_results.csv'), mode='a', header=['model', 'hit@5, hit@10', 'ndcg@5, ndcg@10'], sep='\t', index=False)

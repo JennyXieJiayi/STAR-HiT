@@ -128,9 +128,8 @@ def train(args):
                                       poi_vocab=args.poi_vocab,
                                       data_root=args.data_root,
                                       poi_maxlen=args.poi_maxlen,
-                                      logging=logging,
-                                      test_num_neg=args.test_num_neg)
-            hits, _, ndcgs = evaluate(model, val_data, args.test_batch_size, [5,10], use_cuda, device, args.test_num_neg)
+                                      logging=logging)
+            hits, _, ndcgs = evaluate(model, val_data, args.test_batch_size, [5,10], use_cuda, device)
             logging.info('Evaluation (K={}): Epoch {:04d} | Total Time {:.1f}s | Hit {:.4f} NDCG {:.4f}'.format(5, epoch, time.time() - time3, hits[0], ndcgs[0]))
             logging.info('Evaluation (K={}): Epoch {:04d} | Total Time {:.1f}s | Hit {:.4f} NDCG {:.4f}'.format(10, epoch, time.time() - time3, hits[1], ndcgs[1]))
             epoch_list.append(epoch)

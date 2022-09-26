@@ -23,6 +23,7 @@ class NextPOIDataset(Dataset):
         self.poi_dist_mat_in = []
         self.poi_timediff_mat_in = []
         self.test_num_neg = test_num_neg
+        self.phase = phase
 
         data_path = os.path.join(data_root, '{}.pkl'.format(phase))
         data_dict = joblib.load(data_path)
@@ -34,15 +35,16 @@ class NextPOIDataset(Dataset):
             self.poi_dist_mat_in.append(data_dict[i]['poi_dist_mat_in'])
             self.poi_timediff_mat_in.append(data_dict[i]['poi_timediff_mat_in'])
 
-        if self.test_num_neg:
+        if phase is 'test' and self.test_num_neg:
             poi_tgt_test_file = os.path.join(data_root, 'test_{}.pkl'.format(self.test_num_neg))
             if not os.path.isfile(poi_tgt_test_file):
+                if logging:
+                    logging.info('Generating test set ...')
                 self.poi_tgt_test_dict = {}
                 self.poi_tgt_test = self.test_neg_sampling(self.poi_tgt, self.test_num_neg, poi_tgt_test_file)
             else:
                 self.poi_tgt_test = joblib.load(poi_tgt_test_file)
 
-        self.phase = phase
         self.data_path = data_path
         if logging:
             self.print_info(logging)
@@ -79,7 +81,7 @@ class NextPOIDataset(Dataset):
         self.poi_timediff_padded = np.zeros([self.poi_maxlen, self.poi_maxlen], dtype=np.float32)
         self.poi_timediff_padded[:seq_length,:seq_length] = self.poi_timediff_mat_in[index]
 
-        if self.phase is not 'train' and self.test_num_neg:
+        if self.phase is 'test' and self.test_num_neg:
             tgt = torch.tensor(self.poi_tgt_test[index]).long()
         else:
             tgt = torch.tensor([self.poi_tgt[index]]).long()
