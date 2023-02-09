@@ -73,7 +73,7 @@ or
   author    = {Jiayi Xie and
                Zhenzhong Chen},
   title     = {Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point-of-Interest Recommendation},
-  year      = {2016},
+  year      = {2022},
   archivePrefix = {arXiv},
   eprint    = {2209.01559},
 }
