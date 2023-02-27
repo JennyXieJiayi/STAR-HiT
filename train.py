@@ -20,6 +20,30 @@ import logging
 import os
 
 
+def sampling_prob(prob, label, num_neg):
+    assert prob.shape[0] == label.shape[0]
+    num_label, label_vocab = prob.shape[0], prob.shape[1] - 1  # Prob: (Batch Size, POI Vocab - 1)
+    init_label = np.linspace(0, num_label - 1, num_label)  # (Batch Size), [0 -- POI Vocab - 1]
+    init_prob = torch.zeros(num_label, num_neg + num_label)  # (Batch Size, POI Vocab + Negative Num)
+
+    random_ig = random.sample(range(1, label_vocab + 1), num_neg)  # (Negative Num) from [1 -- label_vocab]
+    while len([lab for lab in label if lab in random_ig]) != 0:  # no intersection
+        random_ig = random.sample(range(1, label_vocab + 1), num_neg)
+
+    args.seed += 1
+    random.seed(args.seed)
+
+    # place the pos labels ahead and neg samples in the end
+    for k in range(num_label):
+        for i in range(num_neg + num_label):
+            if i < num_label:
+                init_prob[k, i] = prob[k, label[i]]
+            else:
+                init_prob[k, i] = prob[k, random_ig[i-num_label]]
+
+    return torch.FloatTensor(init_prob), torch.LongTensor(init_label)  # (N, num_neg+num_label), (N)
+
+
 def train(args):
     # seed
     random.seed(args.seed)
@@ -97,19 +121,16 @@ def train(args):
             batch_idx = idx + 1
             time2 = time.time()
             pad = 0
-            src = batch_data['seq_in'].squeeze()
-            src_dist = batch_data['dist_in'].squeeze()
-            src_timediff = batch_data['timediff_in'].squeeze()
-            src_mask = (src != pad).unsqueeze(-2)
-            tgt = batch_data['target'].view(-1)
-            if use_cuda:
-                src = src.to(device)
-                src_dist = src_dist.to(device)
-                src_timediff = src_timediff.to(device)
-                src_mask = src_mask.to(device)
-                tgt = tgt.to(device)
+            src = batch_data['seq_in'].squeeze().to(device)
+            src_dist = batch_data['dist_in'].squeeze().to(device)
+            src_timediff = batch_data['timediff_in'].squeeze().to(device)
+            src_mask = (src != pad).unsqueeze(-2).to(device)
+            tgt = batch_data['target'].view(-1).to(device)
             out = model.forward(src, src_dist, src_timediff, src_mask)
-            batch_loss = model.loss(out, tgt)
+            if args.train_num_neg:
+                out_, tgt_ = sampling_prob(out, tgt, args.train_num_neg)
+                batch_loss = model.loss(out_, tgt_)
+            else: batch_loss = model.loss(out, tgt)
             batch_loss.backward()
             cur_lr = optimizer.step()
             optimizer.optimizer.zero_grad()

@@ -17,6 +17,8 @@ def parse_args():
     parser.add_argument('--epoch_num', type=int, default=200)
     parser.add_argument('--train_batch_size', type=int, default=128)
     parser.add_argument('--test_batch_size', type=int, default=256)
+    parser.add_argument('--train_num_neg', type=int, default=100,
+                        help='The number of negative samples for the sampled softmax.')
     parser.add_argument('--test_num_neg', type=int, default=5000)
     parser.add_argument('--lr', type=float, default=0.0005)
     parser.add_argument('--opt_factor', type=int, default=1)
