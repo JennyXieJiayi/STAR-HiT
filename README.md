@@ -57,24 +57,10 @@ If you find our codes and datasets helpful, please kindly cite the following pap
   author    = {Jiayi Xie and
                Zhenzhong Chen},
   title     = {Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point-of-Interest Recommendation},
-  journal   = {CoRR},
-  volume    = {abs/2209.01559},
-  year      = {2022},
-  url       = {https://doi.org/10.48550/arXiv.2209.01559},
-  doi       = {arXiv:2209.01559},
-  eprinttype = {arXiv},
-  eprint    = {2209.01559},
-}
-```
-
-or
-```
-@Eprint{STARHiT,
-  author    = {Jiayi Xie and
-               Zhenzhong Chen},
-  title     = {Hierarchical Transformer with Spatio-Temporal Context Aggregation for Next Point-of-Interest Recommendation},
-  year      = {2022},
-  archivePrefix = {arXiv},
-  eprint    = {2209.01559},
-}
+  journal = {ACM Trans. Inf. Syst.},
+  volume = {42},
+  number = {2},
+  year = {2023},
+  url = {https://doi.org/10.1145/3597930},
+  doi = {10.1145/3597930}}
 ```
